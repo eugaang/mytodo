@@ -1,14 +1,6 @@
-const CACHE_NAME = 'todo-app-v2';
-const urlsToCache = [
-  '/',
-  '/index.html'
-];
+const CACHE_NAME = 'todo-app-v3';
 
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(urlsToCache))
-  );
   self.skipWaiting();
 });
 
@@ -19,10 +11,26 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 다른 요청은 캐시 우선, 네트워크 폴백
+  // HTML은 네트워크 우선, 실패시 캐시
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request)
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // 다른 리소스는 네트워크 우선
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => response || fetch(event.request))
+    fetch(event.request)
+      .then((response) => {
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseClone);
+        });
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
 
