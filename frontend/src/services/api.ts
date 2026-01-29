@@ -3,7 +3,8 @@
 
 import type { Todo, Category, CopyResponse } from '../types/todo';
 
-const API_BASE = 'http://localhost:3000/api';
+// 프로덕션에서는 같은 도메인의 /api 사용
+const API_BASE = import.meta.env.PROD ? '/api' : 'http://localhost:3000/api';
 
 // T012: 날짜별 TODO 조회
 export async function getTodos(date: string): Promise<Todo[]> {
@@ -27,9 +28,11 @@ export async function createTodo(
   return res.json();
 }
 
-export async function toggleTodo(id: string): Promise<Todo> {
+export async function toggleTodo(id: string, completed: boolean): Promise<Todo> {
   const res = await fetch(`${API_BASE}/todos/${id}`, {
-    method: 'PATCH',
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ completed }),
   });
   if (!res.ok) throw new Error('Failed to toggle todo');
   return res.json();

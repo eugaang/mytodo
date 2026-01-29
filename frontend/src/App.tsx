@@ -51,7 +51,9 @@ function App() {
 
   const handleToggle = async (id: string) => {
     try {
-      const updated = await toggleTodo(id);
+      const todo = todos.find((t) => t.id === id);
+      if (!todo) return;
+      const updated = await toggleTodo(id, !todo.completed);
       setTodos(todos.map((t) => (t.id === id ? updated : t)));
       setError(null);
     } catch (e) {
