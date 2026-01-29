@@ -1,50 +1,57 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# TODO App Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Simplicity First
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+모든 기능은 가장 단순한 형태로 구현한다.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+- 복잡한 추상화보다 명확한 코드를 우선
+- YAGNI (You Aren't Gonna Need It) 원칙 준수
+- 한 컴포넌트/함수는 하나의 책임만 가짐
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### II. Type Safety
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+TypeScript의 타입 시스템을 적극 활용한다.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+- `any` 타입 사용 금지
+- API 응답과 요청에 명확한 인터페이스 정의
+- 런타임 에러를 컴파일 타임에 방지
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### III. Clear Separation
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+프론트엔드와 백엔드의 역할을 명확히 분리한다.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- React: UI 렌더링과 사용자 상호작용
+- Node.js: 데이터 처리와 비즈니스 로직
+- REST API로 통신, 명확한 계약(contract) 유지
+
+### IV. Incremental Progress
+
+작은 단위로 기능을 완성하고 검증한다.
+
+- 하나의 기능이 완전히 동작한 후 다음으로
+- 명세 → 구현 → 확인 사이클 준수
+- 큰 변경보다 작은 변경의 연속
+
+## Tech Stack
+
+- **Frontend**: React 18+, TypeScript, Vite
+- **Backend**: Node.js, Express, TypeScript
+- **Database**: JSON 파일 (학습용 단순화)
+- **Package Manager**: npm 또는 pnpm
+
+## Development Workflow
+
+1. 명세(Spec)에서 요구사항 확인
+2. 해당 요구사항에 맞는 코드 구현
+3. 수동 테스트로 동작 확인
+4. 명세와 구현의 일치 여부 검증
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+- Constitution은 프로젝트의 최상위 규칙
+- 명세 변경 시 관련 코드도 함께 수정
+- 원칙 위반 시 해당 코드는 리팩토링 대상
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-01-28 | **Last Amended**: 2026-01-28

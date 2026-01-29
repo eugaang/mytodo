@@ -1,0 +1,37 @@
+{
+  "todos": [
+    {
+      "id": "20fd8ca3-4fa2-4bb7-b433-522ed2f6ce86",
+      "content": "놀기",
+      "completed": true,
+      "createdAt": "2026-01-29T08:16:59.141Z",
+      "category": "personal",
+      "date": "2026-01-29"
+    },
+    {
+      "id": "7b4d6b73-f47d-4790-a428-8a9a4bf4d36e",
+      "content": "공부하기",
+      "completed": true,
+      "createdAt": "2026-01-29T08:17:00.563Z",
+      "category": "personal",
+      "date": "2026-01-29"
+    },
+    {
+      "id": "9ed8a233-26f1-4887-b0cf-d8ad4eb9c2ab",
+      "content": "Speckit 코딩 테스트",
+      "completed": false,
+      "category": "work",
+      "date": "2026-01-29",
+      "createdAt": "2026-01-29T08:35:14.674Z"
+    },
+    {
+      "id": "badbf6e7-475a-4364-886f-a87e2fab8c54",
+      "content": "Speckit 코딩 테스트",
+      "completed": false,
+      "category": "work",
+      "date": "2026-01-30",
+      "createdAt": "2026-01-29T08:35:31.691Z"
+    }
+  ],
+  "version": 2
+}

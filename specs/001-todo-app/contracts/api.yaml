@@ -1,0 +1,135 @@
+openapi: 3.0.3
+info:
+  title: TODO App API
+  version: 1.0.0
+  description: Simple TODO application REST API
+
+servers:
+  - url: http://localhost:3000/api
+    description: Local development server
+
+paths:
+  /todos:
+    get:
+      summary: 모든 TODO 항목 조회
+      operationId: getTodos
+      responses:
+        '200':
+          description: TODO 목록 반환
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Todo'
+
+    post:
+      summary: 새 TODO 항목 생성
+      operationId: createTodo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTodoRequest'
+      responses:
+        '201':
+          description: TODO 생성 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          description: 잘못된 요청 (빈 content)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /todos/{id}:
+    patch:
+      summary: TODO 항목 완료 상태 토글
+      operationId: toggleTodo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 토글 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '404':
+          description: TODO 항목 없음
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: TODO 항목 삭제
+      operationId: deleteTodo
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 삭제 성공
+        '404':
+          description: TODO 항목 없음
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Todo:
+      type: object
+      required:
+        - id
+        - content
+        - completed
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        content:
+          type: string
+          minLength: 1
+          example: "우유 사기"
+        completed:
+          type: boolean
+          example: false
+        createdAt:
+          type: string
+          format: date-time
+          example: "2026-01-28T10:30:00.000Z"
+
+    CreateTodoRequest:
+      type: object
+      required:
+        - content
+      properties:
+        content:
+          type: string
+          minLength: 1
+          example: "우유 사기"
+
+    Error:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          example: "Content cannot be empty"

@@ -1,0 +1,218 @@
+/* T024: 기본 CSS 스타일링 */
+/* v2.0: 날짜 선택기, 카테고리, Done 버튼, 복사 버튼 스타일 추가 */
+
+.app {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.error {
+  color: #dc3545;
+  background: #f8d7da;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.message {
+  color: #155724;
+  background: #d4edda;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+/* T027: DatePicker 스타일링 */
+.date-picker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.date-nav-btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.25rem;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.date-nav-btn:hover {
+  background: #e9ecef;
+}
+
+.date-display {
+  font-size: 1.125rem;
+  font-weight: 600;
+  min-width: 120px;
+  text-align: center;
+}
+
+.today-btn {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+.today-btn:hover {
+  background: #5a6268;
+}
+
+/* TodoInput 스타일 */
+.todo-input {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.todo-input input[type="text"] {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.todo-input button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.todo-input button:hover {
+  background: #0056b3;
+}
+
+/* 카테고리 선택 */
+.category-select {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+}
+
+/* T029: 복사 버튼 스타일 */
+.copy-btn {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  background: #17a2b8;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.copy-btn:hover {
+  background: #138496;
+}
+
+/* TodoList 스타일 */
+.todo-list {
+  list-style: none;
+  padding: 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+/* T028: 카테고리 배지 스타일 */
+.category-badge {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  color: white;
+  border-radius: 4px;
+  font-weight: 500;
+  min-width: 2.5rem;
+  text-align: center;
+}
+
+.todo-item span:not(.category-badge) {
+  flex: 1;
+}
+
+/* T023: 완료 상태 취소선 */
+.todo-item span.completed {
+  text-decoration: line-through;
+  color: #888;
+}
+
+/* T022: Done 버튼 스타일 */
+.done-btn {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.done-btn:hover {
+  background: #218838;
+}
+
+.done-btn.done {
+  background: #6c757d;
+}
+
+.done-btn.done:hover {
+  background: #5a6268;
+}
+
+/* 삭제 버튼 */
+.delete-btn {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #c82333;
+}
+
+.empty-message {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  padding: 2rem;
+}
