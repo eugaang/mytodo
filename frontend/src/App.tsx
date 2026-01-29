@@ -1,5 +1,5 @@
-// T016: App.tsx - 컴포넌트 조합 및 API 연동
-// v2.0: 날짜별 관리, 카테고리, 복사 기능
+// T15: App.tsx - v3.0 통합
+// 달력 팝업, 카테고리 섹션, 시간 정렬
 
 import { useState, useEffect } from 'react';
 import { TodoInput } from './components/TodoInput';
@@ -13,6 +13,26 @@ function getToday(): string {
   return new Date().toISOString().split('T')[0];
 }
 
+// T14: 정렬 로직 - 완료 우선, 시간순, 생성순
+function sortTodos(todos: Todo[]): Todo[] {
+  return [...todos].sort((a, b) => {
+    // 1. 완료 항목 우선 (상단)
+    if (a.completed !== b.completed) {
+      return a.completed ? -1 : 1;
+    }
+    // 2. 시간 있는 항목 우선
+    if ((a.time !== undefined) !== (b.time !== undefined)) {
+      return a.time ? -1 : 1;
+    }
+    // 3. 시간순 정렬
+    if (a.time && b.time) {
+      return a.time.localeCompare(b.time);
+    }
+    // 4. 생성 순서
+    return (a.createdAt || '').localeCompare(b.createdAt || '');
+  });
+}
+
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +40,6 @@ function App() {
   const [message, setMessage] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState(getToday());
 
-  // T017, T018: 날짜 변경 시 TODO 새로고침
   useEffect(() => {
     loadTodos(selectedDate);
   }, [selectedDate]);
@@ -29,7 +48,7 @@ function App() {
     try {
       setLoading(true);
       const data = await getTodos(date);
-      setTodos(data);
+      setTodos(sortTodos(data));
       setError(null);
     } catch (e) {
       setError('할 일을 불러오는데 실패했습니다.');
@@ -38,11 +57,11 @@ function App() {
     }
   };
 
-  // T020: 카테고리 포함 추가
-  const handleAdd = async (content: string, category: Category) => {
+  // v3.0: 시간 포함 추가
+  const handleAdd = async (content: string, category: Category, time?: string) => {
     try {
-      const newTodo = await createTodo(content, category, selectedDate);
-      setTodos([...todos, newTodo]);
+      const newTodo = await createTodo(content, category, selectedDate, time);
+      setTodos(sortTodos([...todos, newTodo]));
       setError(null);
     } catch (e) {
       setError('할 일 추가에 실패했습니다.');
@@ -54,7 +73,8 @@ function App() {
       const todo = todos.find((t) => t.id === id);
       if (!todo) return;
       const updated = await toggleTodo(id, !todo.completed);
-      setTodos(todos.map((t) => (t.id === id ? updated : t)));
+      const newTodos = todos.map((t) => (t.id === id ? updated : t));
+      setTodos(sortTodos(newTodos));
       setError(null);
     } catch (e) {
       setError('상태 변경에 실패했습니다.');
@@ -71,13 +91,11 @@ function App() {
     }
   };
 
-  // T024, T025, T026: 내일로 복사
   const handleCopyToNextDay = async () => {
     try {
       const result = await copyToNextDay(selectedDate);
       setMessage(`${result.copiedCount}개 항목이 ${result.targetDate}로 복사되었습니다.`);
       setError(null);
-      // 3초 후 메시지 삭제
       setTimeout(() => setMessage(null), 3000);
     } catch (e) {
       if (e instanceof Error) {
@@ -92,7 +110,7 @@ function App() {
 
   return (
     <div className="app">
-      <h1>TODO App 2.0</h1>
+      <h1>TODO App 3.0</h1>
       <DatePicker selectedDate={selectedDate} onDateChange={setSelectedDate} />
       {error && <p className="error">{error}</p>}
       {message && <p className="message">{message}</p>}

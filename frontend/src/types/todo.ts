@@ -8,6 +8,7 @@ export interface Todo {
   completed: boolean;
   category: Category;
   date: string; // YYYY-MM-DD
+  time?: string; // HH:MM (optional)
   createdAt: string;
 }
 

@@ -11,5 +11,6 @@ export interface Todo {
   completed: boolean;
   category: 'work' | 'personal';
   date: string;
+  time?: string;
   created_at: string;
 }

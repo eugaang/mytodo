@@ -1,22 +1,23 @@
-// T013, T019: TodoInput 컴포넌트 (v2.0 - 카테고리 선택)
-
+// T11: TodoInput 컴포넌트 (v3.0 - 시간 입력 추가)
 import { useState } from 'react';
 import type { Category } from '../types/todo';
 import { CATEGORY_LABELS } from '../types/todo';
 
 interface TodoInputProps {
-  onAdd: (content: string, category: Category) => void;
+  onAdd: (content: string, category: Category, time?: string) => void;
 }
 
 export function TodoInput({ onAdd }: TodoInputProps) {
   const [content, setContent] = useState('');
   const [category, setCategory] = useState<Category>('personal');
+  const [time, setTime] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (content.trim()) {
-      onAdd(content, category);
+      onAdd(content, category, time || undefined);
       setContent('');
+      setTime('');
     }
   };
 
@@ -31,10 +32,17 @@ export function TodoInput({ onAdd }: TodoInputProps) {
         <option value="work">{CATEGORY_LABELS.work}</option>
       </select>
       <input
+        type="time"
+        value={time}
+        onChange={(e) => setTime(e.target.value)}
+        className="time-input"
+      />
+      <input
         type="text"
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="할 일을 입력하세요"
+        className="content-input"
       />
       <button type="submit">추가</button>
     </form>

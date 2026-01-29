@@ -1,4 +1,6 @@
-// T015: DatePicker 컴포넌트 (이전/다음 버튼, 날짜 표시)
+// T07: DatePicker 컴포넌트 (달력 팝업 연동)
+import { useState } from 'react';
+import { CalendarPopup } from './CalendarPopup';
 
 interface DatePickerProps {
   selectedDate: string;
@@ -33,25 +35,37 @@ function addDays(dateStr: string, days: number): string {
 }
 
 export function DatePicker({ selectedDate, onDateChange }: DatePickerProps) {
+  const [showCalendar, setShowCalendar] = useState(false);
+
   const handlePrev = () => onDateChange(addDays(selectedDate, -1));
   const handleNext = () => onDateChange(addDays(selectedDate, 1));
-  const handleToday = () => onDateChange(new Date().toISOString().split('T')[0]);
 
-  const isToday = selectedDate === new Date().toISOString().split('T')[0];
+  const handleDateSelect = (date: string) => {
+    onDateChange(date);
+    setShowCalendar(false);
+  };
 
   return (
     <div className="date-picker">
       <button onClick={handlePrev} className="date-nav-btn">
         &lt;
       </button>
-      <span className="date-display">{formatDisplayDate(selectedDate)}</span>
+      <span
+        className="date-display clickable"
+        onClick={() => setShowCalendar(true)}
+      >
+        {formatDisplayDate(selectedDate)}
+      </span>
       <button onClick={handleNext} className="date-nav-btn">
         &gt;
       </button>
-      {!isToday && (
-        <button onClick={handleToday} className="today-btn">
-          오늘
-        </button>
+
+      {showCalendar && (
+        <CalendarPopup
+          selectedDate={selectedDate}
+          onSelect={handleDateSelect}
+          onClose={() => setShowCalendar(false)}
+        />
       )}
     </div>
   );

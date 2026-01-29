@@ -31,17 +31,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (req.method === 'POST') {
-      const { content, category = 'personal', date } = req.body;
+      const { content, category = 'personal', date, time } = req.body;
 
       if (!content) {
         return res.status(400).json({ error: 'Content is required' });
       }
 
       const todoDate = date || new Date().toISOString().split('T')[0];
+      const todoData: any = { content, category, date: todoDate };
+      if (time) todoData.time = time;
 
       const { data, error } = await supabase
         .from('todos')
-        .insert({ content, category, date: todoDate })
+        .insert(todoData)
         .select()
         .single();
 

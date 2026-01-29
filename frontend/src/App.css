@@ -1,5 +1,5 @@
-/* T024: 기본 CSS 스타일링 */
-/* v2.0: 날짜 선택기, 카테고리, Done 버튼, 복사 버튼 스타일 추가 */
+/* T16: CSS 스타일링 - v3.0 */
+/* 달력 팝업, 카테고리 섹션, 시간 배지 스타일 */
 
 .app {
   max-width: 500px;
@@ -30,7 +30,7 @@ h1 {
   margin-bottom: 1rem;
 }
 
-/* T027: DatePicker 스타일링 */
+/* DatePicker 스타일링 */
 .date-picker {
   display: flex;
   align-items: center;
@@ -40,6 +40,7 @@ h1 {
   padding: 0.75rem;
   background: #f8f9fa;
   border-radius: 8px;
+  position: relative;
 }
 
 .date-nav-btn {
@@ -66,18 +67,129 @@ h1 {
   text-align: center;
 }
 
-.today-btn {
-  padding: 0.25rem 0.75rem;
+.date-display.clickable {
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.date-display.clickable:hover {
+  background: #e9ecef;
+}
+
+/* 달력 팝업 */
+.calendar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.calendar-popup {
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  min-width: 280px;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.calendar-header span {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.calendar-header button {
+  width: 2rem;
+  height: 2rem;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.calendar-header button:hover {
+  background: #e9ecef;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin-bottom: 0.5rem;
+}
+
+.calendar-day-name {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #666;
+  padding: 0.25rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.calendar-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.875rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.calendar-cell:hover:not(.empty) {
+  background: #e9ecef;
+}
+
+.calendar-cell.today {
+  font-weight: bold;
+  color: #007bff;
+}
+
+.calendar-cell.selected {
+  background: #007bff;
+  color: white;
+}
+
+.calendar-cell.selected.today {
+  color: white;
+}
+
+.calendar-cell.empty {
+  cursor: default;
+}
+
+.calendar-today-btn {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
   background: #6c757d;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-left: 0.5rem;
+  font-size: 0.875rem;
 }
 
-.today-btn:hover {
+.calendar-today-btn:hover {
   background: #5a6268;
 }
 
@@ -86,14 +198,34 @@ h1 {
   display: flex;
   gap: 0.5rem;
   margin-bottom: 1rem;
+  flex-wrap: wrap;
 }
 
-.todo-input input[type="text"] {
+.category-select {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  min-width: 4rem;
+}
+
+.time-input {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  width: 7rem;
+}
+
+.content-input {
   flex: 1;
   padding: 0.75rem;
   font-size: 1rem;
   border: 1px solid #ddd;
   border-radius: 4px;
+  min-width: 150px;
 }
 
 .todo-input button {
@@ -110,17 +242,7 @@ h1 {
   background: #0056b3;
 }
 
-/* 카테고리 선택 */
-.category-select {
-  padding: 0.75rem;
-  font-size: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: white;
-  cursor: pointer;
-}
-
-/* T029: 복사 버튼 스타일 */
+/* 복사 버튼 스타일 */
 .copy-btn {
   width: 100%;
   padding: 0.75rem;
@@ -137,42 +259,73 @@ h1 {
   background: #138496;
 }
 
+/* 카테고리 섹션 스타일 */
+.todo-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.todo-section {
+  background: #f8f9fa;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.section-header {
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #495057;
+  border-left: 4px solid;
+  background: #e9ecef;
+}
+
 /* TodoList 스타일 */
 .todo-list {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .todo-item {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: white;
   border-bottom: 1px solid #eee;
 }
 
-/* T028: 카테고리 배지 스타일 */
-.category-badge {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  color: white;
-  border-radius: 4px;
-  font-weight: 500;
-  min-width: 2.5rem;
-  text-align: center;
+.todo-item:last-child {
+  border-bottom: none;
 }
 
-.todo-item span:not(.category-badge) {
+.todo-item.completed {
+  background: #f8f9fa;
+}
+
+/* 시간 배지 */
+.time-badge {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  color: #495057;
+  background: #e9ecef;
+  border-radius: 4px;
+  font-weight: 500;
+  font-family: monospace;
+}
+
+.todo-content {
   flex: 1;
 }
 
-/* T023: 완료 상태 취소선 */
-.todo-item span.completed {
+.todo-item.completed .todo-content {
   text-decoration: line-through;
   color: #888;
 }
 
-/* T022: Done 버튼 스타일 */
+/* Done 버튼 스타일 */
 .done-btn {
   padding: 0.25rem 0.75rem;
   font-size: 0.875rem;
@@ -215,4 +368,23 @@ h1 {
   color: #888;
   font-style: italic;
   padding: 2rem;
+}
+
+/* 반응형 */
+@media (max-width: 480px) {
+  .app {
+    padding: 1rem;
+  }
+
+  .todo-input {
+    flex-direction: column;
+  }
+
+  .todo-input > * {
+    width: 100%;
+  }
+
+  .time-input {
+    width: 100%;
+  }
 }

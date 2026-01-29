@@ -13,16 +13,20 @@ export async function getTodos(date: string): Promise<Todo[]> {
   return res.json();
 }
 
-// T013: TODO 생성 (카테고리, 날짜 지원)
+// T013: TODO 생성 (카테고리, 날짜, 시간 지원)
 export async function createTodo(
   content: string,
   category: Category = 'personal',
-  date: string
+  date: string,
+  time?: string
 ): Promise<Todo> {
+  const body: any = { content, category, date };
+  if (time) body.time = time;
+
   const res = await fetch(`${API_BASE}/todos`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ content, category, date }),
+    body: JSON.stringify(body),
   });
   if (!res.ok) throw new Error('Failed to create todo');
   return res.json();
