@@ -20,16 +20,18 @@ function sortTodos(todos: Todo[]): Todo[] {
     if (a.completed !== b.completed) {
       return a.completed ? -1 : 1;
     }
-    // 2. 시간 있는 항목 우선
-    if ((a.time !== undefined) !== (b.time !== undefined)) {
-      return a.time ? -1 : 1;
+    // 2. 시간 있는 항목 우선 (null 체크)
+    const aHasTime = a.time !== null && a.time !== undefined;
+    const bHasTime = b.time !== null && b.time !== undefined;
+    if (aHasTime !== bHasTime) {
+      return aHasTime ? -1 : 1;
     }
     // 3. 시간순 정렬
-    if (a.time && b.time) {
-      return a.time.localeCompare(b.time);
+    if (aHasTime && bHasTime) {
+      return a.time!.localeCompare(b.time!);
     }
     // 4. 생성 순서
-    return (a.createdAt || '').localeCompare(b.createdAt || '');
+    return (a.created_at || '').localeCompare(b.created_at || '');
   });
 }
 

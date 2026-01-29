@@ -10,7 +10,7 @@ interface TodoItemProps {
 export function TodoItem({ todo, onToggle, onDelete }: TodoItemProps) {
   return (
     <li className={`todo-item ${todo.completed ? 'completed' : ''}`}>
-      {todo.time && (
+      {todo.time && todo.time !== null && (
         <span className="time-badge">{todo.time}</span>
       )}
       <span className="todo-content">

@@ -8,8 +8,8 @@ export interface Todo {
   completed: boolean;
   category: Category;
   date: string; // YYYY-MM-DD
-  time?: string; // HH:MM (optional)
-  createdAt: string;
+  time?: string | null; // HH:MM (optional)
+  created_at: string;
 }
 
 // T011: 카테고리 상수
