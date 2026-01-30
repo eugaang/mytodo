@@ -1,14 +1,15 @@
 // T10: TodoList 컴포넌트 (카테고리 섹션 기반)
-import type { Todo } from '../types/todo';
+import type { Todo, Category } from '../types/todo';
 import { TodoSection } from './TodoSection';
 
 interface TodoListProps {
   todos: Todo[];
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
+  onCategoryChange: (id: string, category: Category) => void;
 }
 
-export function TodoList({ todos, onToggle, onDelete }: TodoListProps) {
+export function TodoList({ todos, onToggle, onDelete, onCategoryChange }: TodoListProps) {
   const workTodos = todos.filter((t) => t.category === 'work');
   const personalTodos = todos.filter((t) => t.category === 'personal');
 
@@ -23,12 +24,14 @@ export function TodoList({ todos, onToggle, onDelete }: TodoListProps) {
         todos={workTodos}
         onToggle={onToggle}
         onDelete={onDelete}
+        onCategoryChange={onCategoryChange}
       />
       <TodoSection
         category="personal"
         todos={personalTodos}
         onToggle={onToggle}
         onDelete={onDelete}
+        onCategoryChange={onCategoryChange}
       />
     </div>
   );

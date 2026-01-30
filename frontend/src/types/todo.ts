@@ -23,9 +23,9 @@ export const CATEGORY_COLORS: Record<Category, string> = {
   personal: '#10b981',
 };
 
-// 복사 응답 타입
-export interface CopyResponse {
-  copiedCount: number;
+// 이동 응답 타입
+export interface MoveResponse {
+  movedCount: number;
   targetDate: string;
-  copiedTodos: Todo[];
+  movedTodos: Todo[];
 }

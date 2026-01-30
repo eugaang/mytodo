@@ -16,16 +16,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { sourceDate } = req.body;
+    const { sourceDate, targetDate } = req.body;
 
-    if (!sourceDate) {
-      return res.status(400).json({ error: 'sourceDate is required' });
+    if (!sourceDate || !targetDate) {
+      return res.status(400).json({ error: 'sourceDate and targetDate are required' });
     }
-
-    // 다음 날 계산
-    const nextDate = new Date(sourceDate);
-    nextDate.setDate(nextDate.getDate() + 1);
-    const targetDate = nextDate.toISOString().split('T')[0];
 
     // 미완료 항목 조회
     const { data: incompleteTodos, error: fetchError } = await supabase
@@ -38,31 +33,41 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (!incompleteTodos || incompleteTodos.length === 0) {
       return res.status(200).json({
-        copiedCount: 0,
+        movedCount: 0,
         targetDate,
-        copiedTodos: []
+        movedTodos: []
       });
     }
 
-    // 다음 날로 복사
+    // 타겟 날짜로 새로 생성
     const todosToInsert = incompleteTodos.map(todo => ({
       content: todo.content,
       category: todo.category,
       date: targetDate,
+      time: todo.time,
       completed: false
     }));
 
-    const { data: copiedTodos, error: insertError } = await supabase
+    const { data: movedTodos, error: insertError } = await supabase
       .from('todos')
       .insert(todosToInsert)
       .select();
 
     if (insertError) throw insertError;
 
+    // 원본 삭제
+    const idsToDelete = incompleteTodos.map(todo => todo.id);
+    const { error: deleteError } = await supabase
+      .from('todos')
+      .delete()
+      .in('id', idsToDelete);
+
+    if (deleteError) throw deleteError;
+
     return res.status(200).json({
-      copiedCount: copiedTodos?.length || 0,
+      movedCount: movedTodos?.length || 0,
       targetDate,
-      copiedTodos: copiedTodos || []
+      movedTodos: movedTodos || []
     });
   } catch (error: any) {
     console.error('API Error:', error);

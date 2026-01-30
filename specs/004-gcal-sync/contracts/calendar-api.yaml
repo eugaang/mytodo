@@ -1,0 +1,193 @@
+openapi: 3.0.3
+info:
+  title: Google Calendar Sync API
+  version: 1.0.0
+  description: API endpoints for Google Calendar integration
+
+servers:
+  - url: /api
+    description: Vercel Serverless Functions
+
+paths:
+  /calendar/connect:
+    get:
+      summary: Initiate Google OAuth flow
+      description: Redirects user to Google OAuth consent screen
+      operationId: connectGoogleCalendar
+      responses:
+        '302':
+          description: Redirect to Google OAuth
+          headers:
+            Location:
+              schema:
+                type: string
+                example: https://accounts.google.com/o/oauth2/v2/auth?...
+
+  /calendar/callback:
+    get:
+      summary: Handle OAuth callback
+      description: Receives authorization code from Google and exchanges for tokens
+      operationId: handleOAuthCallback
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Authorization code from Google
+        - name: error
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Error code if user denied access
+      responses:
+        '302':
+          description: Redirect to app with success/error status
+          headers:
+            Location:
+              schema:
+                type: string
+                example: /?gcal=connected
+        '400':
+          description: Invalid callback parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /calendar/status:
+    get:
+      summary: Get connection status
+      description: Returns current Google Calendar connection status
+      operationId: getConnectionStatus
+      responses:
+        '200':
+          description: Connection status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectionStatus'
+
+  /calendar/sync:
+    post:
+      summary: Sync calendar events to todos
+      description: Fetches events from Google Calendar (7 days) and creates todos
+      operationId: syncCalendarEvents
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  enum: [work, personal]
+                  default: personal
+                  description: Default category for imported todos
+      responses:
+        '200':
+          description: Sync completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncResult'
+        '401':
+          description: Not connected to Google Calendar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Sync failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /calendar/disconnect:
+    post:
+      summary: Disconnect Google Calendar
+      description: Removes stored OAuth tokens and disconnects Google account
+      operationId: disconnectGoogleCalendar
+      responses:
+        '200':
+          description: Successfully disconnected
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Google Calendar disconnected
+        '500':
+          description: Disconnect failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    ConnectionStatus:
+      type: object
+      required:
+        - connected
+      properties:
+        connected:
+          type: boolean
+          description: Whether Google Calendar is connected
+        email:
+          type: string
+          nullable: true
+          description: Connected Google account email
+          example: user@gmail.com
+
+    SyncResult:
+      type: object
+      required:
+        - success
+        - imported
+        - skipped
+        - total
+        - message
+      properties:
+        success:
+          type: boolean
+          description: Whether sync completed successfully
+        imported:
+          type: integer
+          description: Number of new todos created
+          example: 5
+        skipped:
+          type: integer
+          description: Number of duplicate events skipped
+          example: 2
+        total:
+          type: integer
+          description: Total number of calendar events found
+          example: 7
+        message:
+          type: string
+          description: Human-readable result message
+          example: "5개의 일정을 가져왔습니다 (2개 중복 건너뜀)"
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+          example: NOT_CONNECTED
+        message:
+          type: string
+          description: Human-readable error message
+          example: Google Calendar이 연결되지 않았습니다

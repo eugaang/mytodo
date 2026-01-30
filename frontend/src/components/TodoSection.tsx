@@ -8,9 +8,10 @@ interface TodoSectionProps {
   todos: Todo[];
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
+  onCategoryChange: (id: string, category: Category) => void;
 }
 
-export function TodoSection({ category, todos, onToggle, onDelete }: TodoSectionProps) {
+export function TodoSection({ category, todos, onToggle, onDelete, onCategoryChange }: TodoSectionProps) {
   if (todos.length === 0) return null;
 
   return (
@@ -28,6 +29,7 @@ export function TodoSection({ category, todos, onToggle, onDelete }: TodoSection
             todo={todo}
             onToggle={onToggle}
             onDelete={onDelete}
+            onCategoryChange={onCategoryChange}
           />
         ))}
       </ul>

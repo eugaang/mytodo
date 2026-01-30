@@ -1,7 +1,7 @@
 // T007: API 서비스 기본 구조 (v2.0)
 // T012-T014: 날짜별 조회, 카테고리, 복사 API
 
-import type { Todo, Category, CopyResponse } from '../types/todo';
+import type { Todo, Category, MoveResponse } from '../types/todo';
 
 // 프로덕션에서는 같은 도메인의 /api 사용
 const API_BASE = import.meta.env.PROD ? '/api' : 'http://localhost:3000/api';
@@ -42,6 +42,16 @@ export async function toggleTodo(id: string, completed: boolean): Promise<Todo> 
   return res.json();
 }
 
+export async function updateCategory(id: string, category: Category): Promise<Todo> {
+  const res = await fetch(`${API_BASE}/todos/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ category }),
+  });
+  if (!res.ok) throw new Error('Failed to update category');
+  return res.json();
+}
+
 export async function deleteTodo(id: string): Promise<void> {
   const res = await fetch(`${API_BASE}/todos/${id}`, {
     method: 'DELETE',
@@ -49,16 +59,16 @@ export async function deleteTodo(id: string): Promise<void> {
   if (!res.ok) throw new Error('Failed to delete todo');
 }
 
-// T014: 미완료 항목 다음 날짜로 복사
-export async function copyToNextDay(sourceDate: string): Promise<CopyResponse> {
-  const res = await fetch(`${API_BASE}/todos/copy-to-next-day`, {
+// T014: 미완료 항목 특정 날짜로 이동
+export async function moveToDate(sourceDate: string, targetDate: string): Promise<MoveResponse> {
+  const res = await fetch(`${API_BASE}/todos/move-to-date`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sourceDate }),
+    body: JSON.stringify({ sourceDate, targetDate }),
   });
   if (!res.ok) {
     const error = await res.json();
-    throw new Error(error.message || 'Failed to copy todos');
+    throw new Error(error.message || 'Failed to move todos');
   }
   return res.json();
 }

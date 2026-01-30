@@ -258,8 +258,12 @@ h1 {
   background: #0056b3;
 }
 
-/* 복사 버튼 스타일 */
-.copy-btn {
+/* 이동 버튼 섹션 */
+.move-section {
+  margin-bottom: 1rem;
+}
+
+.move-btn {
   width: 100%;
   padding: 0.75rem;
   font-size: 1rem;
@@ -268,11 +272,47 @@ h1 {
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
-.copy-btn:hover {
+.move-btn:hover {
   background: #138496;
+}
+
+.move-options {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.move-option-btn {
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  background: white;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.move-option-btn:hover {
+  background: #17a2b8;
+  color: white;
+  border-color: #17a2b8;
+}
+
+@media (max-width: 480px) {
+  .move-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 /* 카테고리 섹션 스타일 */
@@ -330,6 +370,30 @@ h1 {
   border-radius: 4px;
   font-weight: 500;
   font-family: monospace;
+}
+
+/* 카테고리 배지 */
+.category-badge {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+  user-select: none;
+  transition: opacity 0.2s;
+}
+
+.category-badge:hover {
+  opacity: 0.8;
+}
+
+.category-badge.work {
+  background: #007bff;
+  color: white;
+}
+
+.category-badge.personal {
+  background: #28a745;
+  color: white;
 }
 
 .todo-content {
