@@ -1,4 +1,4 @@
-# speckit 프로젝트 작업 요약
+# mytodo 프로젝트 작업 요약
 
 ## 프로젝트 개요
 
@@ -332,7 +332,7 @@ cd frontend && npm run dev  # http://localhost:5173
 ## 파일 구조
 
 ```text
-speckit/
+mytodo/
 ├── .claude/commands/          # 슬래시 커맨드
 ├── .specify/
 │   ├── memory/

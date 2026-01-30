@@ -59,7 +59,7 @@ npm run dev
 ## 디렉토리 구조
 
 ```
-speckit/
+mytodo/
 ├── backend/
 │   ├── src/
 │   │   ├── models/todo.ts
