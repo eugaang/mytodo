@@ -14,28 +14,30 @@
 - PC: 일정 더블클릭으로 수정 모달 열기
 - 모바일: 일정 탭으로 수정 바텀시트 열기
 - 내용, 시간, 카테고리, 메모 일괄 수정
+- 수정 화면 하단 좌측에 삭제 버튼 추가
 
 #### PC 전용 기능
 - 우클릭 컨텍스트 메뉴 (수정/메모/날짜이동/삭제)
 - 메모 아이콘 호버 시 팝오버로 내용 표시
+- 컨텍스트 메뉴 화면 경계 자동 조정
 
 #### 모바일 전용 기능
-- 스와이프 좌측: 삭제
-- 스와이프 우측: 날짜 이동
 - 바텀시트 UI로 수정/메모 편집
 
 #### 단일 항목 날짜 이동
 - 개별 일정을 다음 7일 중 원하는 날짜로 이동
 
 ### UI/UX 개선
-- 삭제 버튼 제거 (우클릭/스와이프로 대체)
+- 앱 이름 "MyTodo"로 변경
 - PC/모바일 자동 감지 및 최적화된 UX 제공
+- Safari "Dock에 추가" 지원 (PWA)
 
 ### Technical Changes
 - Supabase todos 테이블에 memo 컬럼 추가
-- useDeviceType, useSwipe 커스텀 훅 추가
+- useDeviceType 커스텀 훅 추가
 - Popover, BottomSheet, ContextMenu 공통 컴포넌트 추가
 - API: updateTodo, updateMemo, moveSingleTodo 함수 추가
+- PWA manifest 및 메타태그 개선
 
 ---
 
