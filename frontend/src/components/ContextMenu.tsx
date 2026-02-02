@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useLayoutEffect } from 'react';
 
 export interface ContextMenuItem {
   label: string;
@@ -15,6 +15,36 @@ interface ContextMenuProps {
 
 export function ContextMenu({ isOpen, onClose, position, items }: ContextMenuProps) {
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // 렌더링 후 위치 조정 (DOM 직접 조작)
+  useLayoutEffect(() => {
+    if (!isOpen || !menuRef.current) return;
+
+    const menu = menuRef.current;
+    const rect = menu.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    let newX = position.x;
+    let newY = position.y;
+
+    // 오른쪽 경계 체크
+    if (position.x + rect.width > viewportWidth) {
+      newX = viewportWidth - rect.width - 8;
+    }
+
+    // 아래쪽 경계 체크
+    if (position.y + rect.height > viewportHeight) {
+      newY = viewportHeight - rect.height - 8;
+    }
+
+    // 왼쪽/위쪽 경계 체크
+    if (newX < 8) newX = 8;
+    if (newY < 8) newY = 8;
+
+    menu.style.top = `${newY}px`;
+    menu.style.left = `${newX}px`;
+  }, [isOpen, position]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -39,7 +69,6 @@ export function ContextMenu({ isOpen, onClose, position, items }: ContextMenuPro
 
   if (!isOpen) return null;
 
-  // 화면 경계 체크
   const style: React.CSSProperties = {
     position: 'fixed',
     top: position.y,

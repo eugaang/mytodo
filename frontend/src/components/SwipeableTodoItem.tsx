@@ -1,51 +1,97 @@
-import { type ReactNode } from 'react';
-import { useSwipe } from '../hooks/useSwipe';
+import { useState, useRef, type ReactNode } from 'react';
 
 interface SwipeableTodoItemProps {
   children: ReactNode;
-  onSwipeLeft: () => void;
-  onSwipeRight: () => void;
+  onDelete: () => void;
+  onMoveDate: () => void;
   enabled: boolean;
 }
 
 export function SwipeableTodoItem({
   children,
-  onSwipeLeft,
-  onSwipeRight,
+  onDelete,
+  onMoveDate,
   enabled,
 }: SwipeableTodoItemProps) {
-  const { offsetX, swiping, handlers } = useSwipe({
-    threshold: 80,
-    onSwipeLeft,
-    onSwipeRight,
-  });
+  const [revealedAction, setRevealedAction] = useState<'delete' | 'move' | null>(null);
+  const startX = useRef(0);
+  const startY = useRef(0);
 
   if (!enabled) {
     return <>{children}</>;
   }
 
-  const showDeleteAction = offsetX < -30;
-  const showMoveAction = offsetX > 30;
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDelete();
+    setRevealedAction(null);
+  };
+
+  const handleMoveClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onMoveDate();
+    setRevealedAction(null);
+  };
+
+  const handleSwipeLeft = () => {
+    setRevealedAction(revealedAction === 'delete' ? null : 'delete');
+  };
+
+  const handleSwipeRight = () => {
+    setRevealedAction(revealedAction === 'move' ? null : 'move');
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    startX.current = e.touches[0].clientX;
+    startY.current = e.touches[0].clientY;
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const endX = e.changedTouches[0].clientX;
+    const endY = e.changedTouches[0].clientY;
+    const diffX = endX - startX.current;
+    const diffY = endY - startY.current;
+
+    // 수평 스와이프인 경우에만 처리
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+      if (diffX < 0) {
+        handleSwipeLeft();
+      } else {
+        handleSwipeRight();
+      }
+    }
+  };
+
+  const getTransform = () => {
+    if (revealedAction === 'delete') return 'translateX(-80px)';
+    if (revealedAction === 'move') return 'translateX(80px)';
+    return 'translateX(0)';
+  };
 
   return (
-    <div className="swipeable-container" {...handlers}>
-      {/* 왼쪽 스와이프 액션 (삭제) */}
-      <div
-        className={`swipe-action swipe-action-delete ${showDeleteAction ? 'visible' : ''}`}
+    <div className="swipeable-container">
+      {/* 삭제 버튼 (오른쪽에 위치) */}
+      <button
+        className={`swipe-action-btn swipe-action-delete ${revealedAction === 'delete' ? 'visible' : ''}`}
+        onClick={handleDeleteClick}
       >
         삭제
-      </div>
-      {/* 오른쪽 스와이프 액션 (날짜 이동) */}
-      <div
-        className={`swipe-action swipe-action-move ${showMoveAction ? 'visible' : ''}`}
+      </button>
+      {/* 이동 버튼 (왼쪽에 위치) */}
+      <button
+        className={`swipe-action-btn swipe-action-move ${revealedAction === 'move' ? 'visible' : ''}`}
+        onClick={handleMoveClick}
       >
         이동
-      </div>
+      </button>
       <div
         className="swipeable-content"
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+        onClick={() => revealedAction && setRevealedAction(null)}
         style={{
-          transform: `translateX(${offsetX}px)`,
-          transition: swiping ? 'none' : 'transform 0.3s ease',
+          transform: getTransform(),
+          transition: 'transform 0.3s ease',
         }}
       >
         {children}

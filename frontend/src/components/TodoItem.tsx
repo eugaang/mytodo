@@ -98,11 +98,11 @@ export function TodoItem({
   };
 
   // 스와이프 핸들러 (모바일)
-  const handleSwipeLeft = () => {
+  const handleSwipeDelete = () => {
     onDelete(todo.id);
   };
 
-  const handleSwipeRight = () => {
+  const handleSwipeMoveDate = () => {
     onMoveDate(todo);
   };
 
@@ -207,8 +207,8 @@ export function TodoItem({
       {isMobile ? (
         <SwipeableTodoItem
           enabled={isMobile}
-          onSwipeLeft={handleSwipeLeft}
-          onSwipeRight={handleSwipeRight}
+          onDelete={handleSwipeDelete}
+          onMoveDate={handleSwipeMoveDate}
         >
           {itemContent}
         </SwipeableTodoItem>
