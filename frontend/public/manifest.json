@@ -1,11 +1,11 @@
 {
-  "name": "TODO App 2.0",
-  "short_name": "TODO",
+  "name": "MyTodo",
+  "short_name": "MyTodo",
   "description": "날짜별 할 일 관리 앱",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1a1a1a",
-  "theme_color": "#646cff",
+  "background_color": "#ffffff",
+  "theme_color": "#007bff",
   "orientation": "portrait",
   "icons": [
     {
