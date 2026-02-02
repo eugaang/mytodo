@@ -803,13 +803,19 @@ h1 {
 
 .form-actions {
   display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
   margin-top: 1rem;
 }
 
+.form-actions-right {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .form-cancel-btn,
-.form-save-btn {
+.form-save-btn,
+.form-delete-btn {
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   border: none;
@@ -833,6 +839,15 @@ h1 {
 
 .form-save-btn:hover {
   background: #0056b3;
+}
+
+.form-delete-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.form-delete-btn:hover {
+  background: #c82333;
 }
 
 /* 날짜 이동 옵션 */

@@ -4,7 +4,6 @@ import type { Todo, Category } from '../types/todo';
 import { MemoEditor } from './MemoEditor';
 import { Popover } from './Popover';
 import { ContextMenu, type ContextMenuItem } from './ContextMenu';
-import { SwipeableTodoItem } from './SwipeableTodoItem';
 import { BottomSheet } from './BottomSheet';
 
 interface TodoItemProps {
@@ -95,15 +94,6 @@ export function TodoItem({
     onMemoChange(todo.id, null);
     setMemoPopoverAnchor(null);
     setShowMemoView(false);
-  };
-
-  // 스와이프 핸들러 (모바일)
-  const handleSwipeDelete = () => {
-    onDelete(todo.id);
-  };
-
-  const handleSwipeMoveDate = () => {
-    onMoveDate(todo);
   };
 
   const contextMenuItems: ContextMenuItem[] = [
@@ -204,17 +194,7 @@ export function TodoItem({
 
   return (
     <>
-      {isMobile ? (
-        <SwipeableTodoItem
-          enabled={isMobile}
-          onDelete={handleSwipeDelete}
-          onMoveDate={handleSwipeMoveDate}
-        >
-          {itemContent}
-        </SwipeableTodoItem>
-      ) : (
-        itemContent
-      )}
+      {itemContent}
 
       {/* 모바일: 메모 보기 바텀시트 */}
       <BottomSheet

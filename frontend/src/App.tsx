@@ -275,6 +275,12 @@ function App() {
         isOpen={!!editingTodo}
         onClose={() => setEditingTodo(null)}
         onSave={handleEditTodo}
+        onDelete={() => {
+          if (editingTodo) {
+            handleDelete(editingTodo.id);
+            setEditingTodo(null);
+          }
+        }}
         isMobile={isMobile}
       />
 

@@ -7,10 +7,11 @@ interface TodoEditModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (updates: { content: string; time: string | null; category: Category; memo: string | null }) => void;
+  onDelete: () => void;
   isMobile: boolean;
 }
 
-export function TodoEditModal({ todo, isOpen, onClose, onSave, isMobile }: TodoEditModalProps) {
+export function TodoEditModal({ todo, isOpen, onClose, onSave, onDelete, isMobile }: TodoEditModalProps) {
   // 초기값을 todo에서 직접 가져옴
   const [content, setContent] = useState(todo?.content || '');
   const [time, setTime] = useState(todo?.time || '');
@@ -81,12 +82,17 @@ export function TodoEditModal({ todo, isOpen, onClose, onSave, isMobile }: TodoE
         />
       </div>
       <div className="form-actions">
-        <button className="form-cancel-btn" onClick={onClose}>
-          취소
+        <button className="form-delete-btn" onClick={onDelete}>
+          삭제
         </button>
-        <button className="form-save-btn" onClick={handleSave}>
-          저장
-        </button>
+        <div className="form-actions-right">
+          <button className="form-cancel-btn" onClick={onClose}>
+            취소
+          </button>
+          <button className="form-save-btn" onClick={handleSave}>
+            저장
+          </button>
+        </div>
       </div>
     </div>
   );
