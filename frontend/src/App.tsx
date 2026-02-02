@@ -1,14 +1,18 @@
-// T15: App.tsx - v3.0 통합
+// App.tsx - v5.0 메모 및 수정 기능
 // 달력 팝업, 카테고리 섹션, 시간 정렬
 // v4.0: Google Calendar 연동
+// v5.0: 메모, 수정, PC/모바일 분기
 
 import { useState, useEffect } from 'react';
 import { TodoInput } from './components/TodoInput';
 import { TodoList } from './components/TodoList';
 import { DatePicker } from './components/DatePicker';
+import { TodoEditModal } from './components/TodoEditModal';
+import { DateMoveSelector } from './components/DateMoveSelector';
 import GoogleCalendarButton from './components/GoogleCalendarButton';
-import { getTodos, createTodo, toggleTodo, deleteTodo, moveToDate, updateCategory } from './services/api';
+import { getTodos, createTodo, toggleTodo, deleteTodo, moveToDate, updateCategory, updateTodo, updateMemo, moveSingleTodo } from './services/api';
 import { getConnectionStatus } from './services/googleCalendar';
+import { useDeviceType } from './hooks/useDeviceType';
 import type { Todo, Category } from './types/todo';
 import type { CalendarConnectionStatus } from './types/calendar';
 import './App.css';
@@ -65,6 +69,9 @@ function App() {
   const [selectedDate, setSelectedDate] = useState(getToday());
   const [calendarStatus, setCalendarStatus] = useState<CalendarConnectionStatus>({ connected: false, email: null });
   const [showMoveOptions, setShowMoveOptions] = useState(false);
+  const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
+  const [movingTodo, setMovingTodo] = useState<Todo | null>(null);
+  const { isMobile } = useDeviceType();
 
   useEffect(() => {
     loadTodos(selectedDate);
@@ -105,7 +112,7 @@ function App() {
       const data = await getTodos(date);
       setTodos(sortTodos(data));
       setError(null);
-    } catch (e) {
+    } catch {
       setError('할 일을 불러오는데 실패했습니다.');
     } finally {
       setLoading(false);
@@ -118,7 +125,7 @@ function App() {
       const newTodo = await createTodo(content, category, selectedDate, time);
       setTodos(sortTodos([...todos, newTodo]));
       setError(null);
-    } catch (e) {
+    } catch {
       setError('할 일 추가에 실패했습니다.');
     }
   };
@@ -131,7 +138,7 @@ function App() {
       const newTodos = todos.map((t) => (t.id === id ? updated : t));
       setTodos(sortTodos(newTodos));
       setError(null);
-    } catch (e) {
+    } catch {
       setError('상태 변경에 실패했습니다.');
     }
   };
@@ -141,7 +148,7 @@ function App() {
       await deleteTodo(id);
       setTodos(todos.filter((t) => t.id !== id));
       setError(null);
-    } catch (e) {
+    } catch {
       setError('삭제에 실패했습니다.');
     }
   };
@@ -170,8 +177,46 @@ function App() {
       const newTodos = todos.map((t) => (t.id === id ? updated : t));
       setTodos(sortTodos(newTodos));
       setError(null);
-    } catch (e) {
+    } catch {
       setError('카테고리 변경에 실패했습니다.');
+    }
+  };
+
+  const handleMemoChange = async (id: string, memo: string | null) => {
+    try {
+      const updated = await updateMemo(id, memo);
+      const newTodos = todos.map((t) => (t.id === id ? updated : t));
+      setTodos(sortTodos(newTodos));
+      setError(null);
+    } catch {
+      setError('메모 저장에 실패했습니다.');
+    }
+  };
+
+  const handleEditTodo = async (updates: { content: string; time: string | null; category: Category; memo: string | null }) => {
+    if (!editingTodo) return;
+    try {
+      const updated = await updateTodo(editingTodo.id, updates);
+      const newTodos = todos.map((t) => (t.id === editingTodo.id ? updated : t));
+      setTodos(sortTodos(newTodos));
+      setEditingTodo(null);
+      setError(null);
+    } catch {
+      setError('일정 수정에 실패했습니다.');
+    }
+  };
+
+  const handleMoveSingleTodo = async (targetDate: string) => {
+    if (!movingTodo) return;
+    try {
+      await moveSingleTodo(movingTodo.id, targetDate);
+      setTodos(todos.filter((t) => t.id !== movingTodo.id));
+      setMovingTodo(null);
+      setMessage(`일정이 ${targetDate}로 이동되었습니다.`);
+      setTimeout(() => setMessage(null), 3000);
+      setError(null);
+    } catch {
+      setError('일정 이동에 실패했습니다.');
     }
   };
 
@@ -214,11 +259,33 @@ function App() {
       ) : (
         <TodoList
           todos={todos}
+          isMobile={isMobile}
           onToggle={handleToggle}
           onDelete={handleDelete}
           onCategoryChange={handleCategoryChange}
+          onMemoChange={handleMemoChange}
+          onEdit={setEditingTodo}
+          onMoveDate={setMovingTodo}
         />
       )}
+
+      {/* 일정 수정 모달/바텀시트 */}
+      <TodoEditModal
+        todo={editingTodo}
+        isOpen={!!editingTodo}
+        onClose={() => setEditingTodo(null)}
+        onSave={handleEditTodo}
+        isMobile={isMobile}
+      />
+
+      {/* 단일 항목 날짜 이동 선택기 */}
+      <DateMoveSelector
+        isOpen={!!movingTodo}
+        onClose={() => setMovingTodo(null)}
+        onSelectDate={handleMoveSingleTodo}
+        currentDate={selectedDate}
+        isMobile={isMobile}
+      />
     </div>
   );
 }

@@ -482,3 +482,491 @@ h1 {
     flex: 0 0 auto;
   }
 }
+
+/* ========================================
+   v5.0: 메모 및 수정 기능 스타일
+   ======================================== */
+
+/* 메모 아이콘 */
+.memo-icon-wrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.memo-icon {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+
+.memo-icon:hover,
+.memo-icon.has-memo {
+  opacity: 1;
+}
+
+.memo-icon.expanded {
+  opacity: 1;
+}
+
+/* 메모 툴팁 (PC) */
+.memo-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: pre-wrap;
+  max-width: 200px;
+  z-index: 100;
+  margin-bottom: 4px;
+}
+
+.memo-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #333;
+}
+
+/* 메모 에디터 */
+.memo-editor {
+  padding: 0.75rem;
+  background: white;
+  border-radius: 8px;
+  min-width: 250px;
+}
+
+.memo-textarea {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.memo-textarea:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.memo-editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.memo-cancel-btn,
+.memo-save-btn {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.memo-cancel-btn {
+  background: #f8f9fa;
+  color: #666;
+}
+
+.memo-cancel-btn:hover {
+  background: #e9ecef;
+}
+
+.memo-save-btn {
+  background: #007bff;
+  color: white;
+}
+
+.memo-save-btn:hover {
+  background: #0056b3;
+}
+
+/* 팝오버 */
+.popover {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+/* 컨텍스트 메뉴 */
+.context-menu {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  min-width: 120px;
+  padding: 0.25rem 0;
+  z-index: 1000;
+}
+
+.context-menu-item {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  background: none;
+  border: none;
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: #333;
+}
+
+.context-menu-item:hover {
+  background: #f8f9fa;
+}
+
+.context-menu-item.danger {
+  color: #dc3545;
+}
+
+.context-menu-item.danger:hover {
+  background: #f8d7da;
+}
+
+/* 바텀시트 */
+.bottom-sheet-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bottom-sheet {
+  background: white;
+  width: 100%;
+  max-width: 500px;
+  max-height: 80vh;
+  border-radius: 16px 16px 0 0;
+  padding: 1rem;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.bottom-sheet-handle {
+  width: 40px;
+  height: 4px;
+  background: #ddd;
+  border-radius: 2px;
+  margin: 0 auto 1rem;
+}
+
+.bottom-sheet-title {
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.bottom-sheet-content {
+  overflow-y: auto;
+}
+
+/* 모달 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-content.modal-small {
+  max-width: 300px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  color: #333;
+}
+
+/* 일정 수정 폼 */
+.todo-edit-form {
+  padding: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 0.25rem;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-time {
+  width: auto;
+}
+
+.form-textarea {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.form-cancel-btn,
+.form-save-btn {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.form-cancel-btn {
+  background: #f8f9fa;
+  color: #666;
+}
+
+.form-cancel-btn:hover {
+  background: #e9ecef;
+}
+
+.form-save-btn {
+  background: #007bff;
+  color: white;
+}
+
+.form-save-btn:hover {
+  background: #0056b3;
+}
+
+/* 날짜 이동 옵션 */
+.date-move-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.date-move-option {
+  padding: 0.75rem;
+  font-size: 0.875rem;
+  background: #f8f9fa;
+  color: #333;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.date-move-option:hover {
+  background: #17a2b8;
+  color: white;
+  border-color: #17a2b8;
+}
+
+/* 스와이프 컨테이너 */
+.swipeable-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.swipeable-content {
+  position: relative;
+  z-index: 1;
+  background: white;
+}
+
+.swipe-action {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: white;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.swipe-action.visible {
+  opacity: 1;
+}
+
+.swipe-action-delete {
+  right: 0;
+  background: #dc3545;
+}
+
+.swipe-action-move {
+  left: 0;
+  background: #17a2b8;
+}
+
+/* 메모 아코디언 (모바일) */
+.memo-accordion {
+  background: #f8f9fa;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.memo-preview {
+  font-size: 0.875rem;
+  color: #666;
+  white-space: pre-wrap;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.memo-preview:hover {
+  background: #e9ecef;
+}
+
+/* 메모 보기 */
+.memo-view {
+  padding: 0.75rem;
+  min-width: 200px;
+}
+
+.memo-view-content {
+  font-size: 0.875rem;
+  color: #333;
+  white-space: pre-wrap;
+  line-height: 1.5;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.memo-view-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.memo-edit-btn,
+.memo-delete-btn {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.memo-edit-btn {
+  background: #007bff;
+  color: white;
+}
+
+.memo-edit-btn:hover {
+  background: #0056b3;
+}
+
+.memo-delete-btn {
+  background: #f8f9fa;
+  color: #dc3545;
+}
+
+.memo-delete-btn:hover {
+  background: #f8d7da;
+}

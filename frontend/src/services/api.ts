@@ -20,7 +20,7 @@ export async function createTodo(
   date: string,
   time?: string
 ): Promise<Todo> {
-  const body: any = { content, category, date };
+  const body: Record<string, string> = { content, category, date };
   if (time) body.time = time;
 
   const res = await fetch(`${API_BASE}/todos`, {
@@ -70,5 +70,35 @@ export async function moveToDate(sourceDate: string, targetDate: string): Promis
     const error = await res.json();
     throw new Error(error.message || 'Failed to move todos');
   }
+  return res.json();
+}
+
+// 일정 전체 수정 (content, time, category, memo)
+export async function updateTodo(
+  id: string,
+  updates: { content?: string; time?: string | null; category?: Category; memo?: string | null }
+): Promise<Todo> {
+  const res = await fetch(`${API_BASE}/todos/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates),
+  });
+  if (!res.ok) throw new Error('Failed to update todo');
+  return res.json();
+}
+
+// 메모만 수정
+export async function updateMemo(id: string, memo: string | null): Promise<Todo> {
+  return updateTodo(id, { memo });
+}
+
+// 단일 항목 날짜 이동
+export async function moveSingleTodo(id: string, targetDate: string): Promise<Todo> {
+  const res = await fetch(`${API_BASE}/todos/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ date: targetDate }),
+  });
+  if (!res.ok) throw new Error('Failed to move todo');
   return res.json();
 }

@@ -9,6 +9,7 @@ export interface Todo {
   category: Category;
   date: string; // YYYY-MM-DD
   time?: string | null; // HH:MM (optional)
+  memo?: string | null; // 메모 필드
   created_at: string;
 }
 
