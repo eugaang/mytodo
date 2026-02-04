@@ -106,6 +106,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         let eventTime: string | null = null;
 
         if (event.start?.dateTime) {
+          console.log('DEBUG event:', {
+            summary,
+            rawDateTime: event.start.dateTime,
+            parsedDate: formatDateKST(event.start.dateTime),
+            parsedTime: formatTimeKST(event.start.dateTime),
+          });
           eventDate = formatDateKST(event.start.dateTime);
           eventTime = formatTimeKST(event.start.dateTime);
         } else if (event.start?.date) {
