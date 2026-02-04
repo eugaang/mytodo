@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Todo, Category } from '../types/todo';
 import { BottomSheet } from './BottomSheet';
 
@@ -12,19 +12,20 @@ interface TodoEditModalProps {
 }
 
 export function TodoEditModal({ todo, isOpen, onClose, onSave, onDelete, isMobile }: TodoEditModalProps) {
-  // 초기값을 todo에서 직접 가져옴
   const [content, setContent] = useState(todo?.content || '');
   const [time, setTime] = useState(todo?.time || '');
   const [category, setCategory] = useState<Category>(todo?.category || 'personal');
   const [memo, setMemo] = useState(todo?.memo || '');
 
-  // todo가 변경되면 상태 업데이트 (key prop으로 리렌더 유도)
-  if (todo && content !== todo.content && isOpen) {
-    setContent(todo.content);
-    setTime(todo.time || '');
-    setCategory(todo.category);
-    setMemo(todo.memo || '');
-  }
+  // todo가 변경되거나 모달이 열릴 때만 상태 초기화
+  useEffect(() => {
+    if (todo && isOpen) {
+      setContent(todo.content);
+      setTime(todo.time || '');
+      setCategory(todo.category);
+      setMemo(todo.memo || '');
+    }
+  }, [todo?.id, isOpen]);
 
   const handleSave = () => {
     if (!content.trim()) return;

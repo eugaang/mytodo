@@ -61,6 +61,18 @@ router.patch('/:id', (req, res) => {
   res.json(todo);
 });
 
+// PUT /api/todos/:id (수정)
+router.put('/:id', (req, res) => {
+  const { content, time, category, memo, date, completed } = req.body;
+  const todo = todoService.update(req.params.id, { content, time, category, memo, date, completed });
+
+  if (!todo) {
+    return res.status(404).json({ message: 'Todo not found' });
+  }
+
+  res.json(todo);
+});
+
 // T022: DELETE /api/todos/:id (Phase 5)
 router.delete('/:id', (req, res) => {
   const success = todoService.remove(req.params.id);

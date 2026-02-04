@@ -148,3 +148,26 @@ export function remove(id: string): boolean {
   writeData(data);
   return true;
 }
+
+// update (content, time, category, memo, date 등 수정)
+export function update(
+  id: string,
+  updates: { content?: string; time?: string | null; category?: Category; memo?: string | null; date?: string; completed?: boolean }
+): Todo | null {
+  const data = readData();
+  const todo = data.todos.find((t) => t.id === id);
+  if (!todo) return null;
+
+  if (updates.content !== undefined) {
+    if (!isValidContent(updates.content)) return null;
+    todo.content = updates.content.trim();
+  }
+  if (updates.time !== undefined) todo.time = updates.time || undefined;
+  if (updates.category !== undefined) todo.category = updates.category;
+  if (updates.memo !== undefined) todo.memo = updates.memo || undefined;
+  if (updates.date !== undefined) todo.date = updates.date;
+  if (updates.completed !== undefined) todo.completed = updates.completed;
+
+  writeData(data);
+  return todo;
+}
