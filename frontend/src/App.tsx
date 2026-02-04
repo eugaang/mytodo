@@ -224,7 +224,7 @@ function App() {
 
   return (
     <div className="app">
-      <h1>MyTodo</h1>
+      <h1 onClick={() => loadTodos(selectedDate)} style={{ cursor: 'pointer' }}>MyTodo</h1>
       <DatePicker selectedDate={selectedDate} onDateChange={setSelectedDate} />
       {error && <p className="error">{error}</p>}
       {message && <p className="message">{message}</p>}

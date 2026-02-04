@@ -122,13 +122,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         }
 
         // 중복 체크: 같은 날짜, content, time
-        const { data: existing } = await supabase
+        let query = supabase
           .from('todos')
           .select('id')
           .eq('date', eventDate)
-          .eq('content', summary)
-          .eq('time', eventTime)
-          .limit(1);
+          .eq('content', summary);
+
+        // NULL 비교는 .is() 사용
+        if (eventTime === null) {
+          query = query.is('time', null);
+        } else {
+          query = query.eq('time', eventTime);
+        }
+
+        const { data: existing } = await query.limit(1);
 
         if (existing && existing.length > 0) {
           skipped++;
