@@ -8,6 +8,12 @@ const oauth2Client = new google.auth.OAuth2(
 );
 
 export function getAuthUrl(): string {
+  console.log('ENV CHECK:', {
+    clientId: process.env.GOOGLE_CLIENT_ID ? 'SET' : 'MISSING',
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET ? 'SET' : 'MISSING',
+    redirectUri: process.env.GOOGLE_REDIRECT_URI || 'MISSING',
+  });
+
   return oauth2Client.generateAuthUrl({
     access_type: 'offline',
     prompt: 'consent',
