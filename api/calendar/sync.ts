@@ -24,18 +24,26 @@ function isWorkCalendar(calendarName: string): boolean {
   return WORK_KEYWORDS.some(keyword => lowerName.includes(keyword));
 }
 
-function formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+const KST_TIMEZONE = 'Asia/Seoul';
+
+function formatDateKST(dateTime: string): string {
+  const date = new Date(dateTime);
+  return date.toLocaleDateString('ko-KR', {
+    timeZone: KST_TIMEZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).replace(/\. /g, '-').replace('.', '');
 }
 
-function formatTime(dateTime: string): string {
+function formatTimeKST(dateTime: string): string {
   const date = new Date(dateTime);
-  const hours = date.getHours().toString().padStart(2, '0');
-  const minutes = date.getMinutes().toString().padStart(2, '0');
-  return `${hours}:${minutes}`;
+  return date.toLocaleTimeString('ko-KR', {
+    timeZone: KST_TIMEZONE,
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  });
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -98,8 +106,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         let eventTime: string | null = null;
 
         if (event.start?.dateTime) {
-          eventDate = formatDate(new Date(event.start.dateTime));
-          eventTime = formatTime(event.start.dateTime);
+          eventDate = formatDateKST(event.start.dateTime);
+          eventTime = formatTimeKST(event.start.dateTime);
         } else if (event.start?.date) {
           eventDate = event.start.date;
           eventTime = null;
