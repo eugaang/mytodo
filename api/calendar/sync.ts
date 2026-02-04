@@ -24,26 +24,26 @@ function isWorkCalendar(calendarName: string): boolean {
   return WORK_KEYWORDS.some(keyword => lowerName.includes(keyword));
 }
 
-const KST_TIMEZONE = 'Asia/Seoul';
+const KST_OFFSET_MS = 9 * 60 * 60 * 1000; // UTC+9
+
+function toKST(dateTime: string): Date {
+  const utc = new Date(dateTime);
+  return new Date(utc.getTime() + KST_OFFSET_MS);
+}
 
 function formatDateKST(dateTime: string): string {
-  const date = new Date(dateTime);
-  return date.toLocaleDateString('ko-KR', {
-    timeZone: KST_TIMEZONE,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).replace(/\. /g, '-').replace('.', '');
+  const kst = toKST(dateTime);
+  const year = kst.getUTCFullYear();
+  const month = String(kst.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(kst.getUTCDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 
 function formatTimeKST(dateTime: string): string {
-  const date = new Date(dateTime);
-  return date.toLocaleTimeString('ko-KR', {
-    timeZone: KST_TIMEZONE,
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  });
+  const kst = toKST(dateTime);
+  const hours = String(kst.getUTCHours()).padStart(2, '0');
+  const minutes = String(kst.getUTCMinutes()).padStart(2, '0');
+  return `${hours}:${minutes}`;
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
