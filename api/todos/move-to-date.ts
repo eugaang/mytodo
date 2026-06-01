@@ -45,6 +45,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       category: todo.category,
       date: targetDate,
       time: todo.time,
+      memo: todo.memo,
       completed: false
     }));
 
