@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
-    "@vercel/node": "^3.0.0",
-    "googleapis": "^171.0.0"
+    "@vercel/node": "^3.0.0"
   }
 }

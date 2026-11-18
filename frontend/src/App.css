@@ -997,3 +997,39 @@ h1 {
 .memo-delete-btn:hover {
   background: #f8d7da;
 }
+
+/* Persisted timeline / category view selector */
+.view-mode-toggle {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 1rem;
+  background: #f1f3f5;
+  border-radius: 8px;
+}
+.view-mode-toggle button {
+  flex: 1;
+  background: transparent;
+  color: #495057;
+  font-size: 0.875rem;
+}
+.view-mode-toggle button[aria-pressed="true"] {
+  background: #007bff;
+  color: white;
+}
+.popover {
+  color: #333;
+  font-family: system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
+  overflow: auto;
+  overflow-wrap: anywhere;
+  width: 300px;
+}
+.popover .memo-editor,
+.popover .memo-view {
+  min-width: 0;
+}
+.memo-textarea {
+  color: #333;
+  background: white;
+}

@@ -1,20 +1,12 @@
-// App.tsx - v5.0 메모 및 수정 기능
-// 달력 팝업, 카테고리 섹션, 시간 정렬
-// v4.0: Google Calendar 연동
-// v5.0: 메모, 수정, PC/모바일 분기
-
 import { useState, useEffect } from 'react';
 import { TodoInput } from './components/TodoInput';
 import { TodoList } from './components/TodoList';
 import { DatePicker } from './components/DatePicker';
 import { TodoEditModal } from './components/TodoEditModal';
 import { DateMoveSelector } from './components/DateMoveSelector';
-import GoogleCalendarButton from './components/GoogleCalendarButton';
 import { getTodos, createTodo, toggleTodo, deleteTodo, moveToDate, updateCategory, updateTodo, updateMemo, moveSingleTodo } from './services/api';
-import { getConnectionStatus } from './services/googleCalendar';
 import { useDeviceType } from './hooks/useDeviceType';
 import type { Todo, Category } from './types/todo';
-import type { CalendarConnectionStatus } from './types/calendar';
 import './App.css';
 
 function getToday(): string {
@@ -67,7 +59,22 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState(getToday());
-  const [calendarStatus, setCalendarStatus] = useState<CalendarConnectionStatus>({ connected: false, email: null });
+  const [viewMode, setViewMode] = useState<'combined' | 'split'>(() => {
+    try {
+      return localStorage.getItem('mytodo:view-mode:v1') === 'split' ? 'split' : 'combined';
+    } catch {
+      return 'combined';
+    }
+  });
+
+  const changeViewMode = (mode: 'combined' | 'split') => {
+    setViewMode(mode);
+    try {
+      localStorage.setItem('mytodo:view-mode:v1', mode);
+    } catch {
+      // The view still works when browser storage is unavailable.
+    }
+  };
   const [showMoveOptions, setShowMoveOptions] = useState(false);
   const [editingTodo, setEditingTodo] = useState<Todo | null>(null);
   const [movingTodo, setMovingTodo] = useState<Todo | null>(null);
@@ -76,35 +83,6 @@ function App() {
   useEffect(() => {
     loadTodos(selectedDate);
   }, [selectedDate]);
-
-  useEffect(() => {
-    checkCalendarConnection();
-    handleOAuthCallback();
-  }, []);
-
-  const checkCalendarConnection = async () => {
-    try {
-      const status = await getConnectionStatus();
-      setCalendarStatus(status);
-    } catch {
-      // Ignore error, default to not connected
-    }
-  };
-
-  const handleOAuthCallback = () => {
-    const params = new URLSearchParams(window.location.search);
-    const gcal = params.get('gcal');
-    if (gcal === 'connected') {
-      setMessage('Google 캘린더가 연결되었습니다!');
-      checkCalendarConnection();
-      window.history.replaceState({}, '', '/');
-      setTimeout(() => setMessage(null), 3000);
-    } else if (gcal === 'error') {
-      const reason = params.get('reason');
-      setError(`Google 캘린더 연결 실패: ${reason || 'unknown'}`);
-      window.history.replaceState({}, '', '/');
-    }
-  };
 
   const loadTodos = async (date: string) => {
     try {
@@ -228,11 +206,6 @@ function App() {
       <DatePicker selectedDate={selectedDate} onDateChange={setSelectedDate} />
       {error && <p className="error">{error}</p>}
       {message && <p className="message">{message}</p>}
-      <GoogleCalendarButton
-        connectionStatus={calendarStatus}
-        onStatusChange={checkCalendarConnection}
-        onSyncComplete={() => loadTodos(selectedDate)}
-      />
       <TodoInput onAdd={handleAdd} />
       {incompleteTodos.length > 0 && (
         <div className="move-section">
@@ -254,11 +227,16 @@ function App() {
           )}
         </div>
       )}
+      <div className="view-mode-toggle" role="group" aria-label="일정 보기 방식">
+        <button type="button" aria-pressed={viewMode === 'combined'} onClick={() => changeViewMode('combined')}>함께보기</button>
+        <button type="button" aria-pressed={viewMode === 'split'} onClick={() => changeViewMode('split')}>나눠보기</button>
+      </div>
       {loading ? (
         <p>로딩 중...</p>
       ) : (
         <TodoList
           todos={todos}
+          viewMode={viewMode}
           isMobile={isMobile}
           onToggle={handleToggle}
           onDelete={handleDelete}
